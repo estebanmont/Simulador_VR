@@ -5,32 +5,26 @@ using UnityEngine;
 public class BoatMovement : MonoBehaviour
 {
     [SerializeField] private Transform[] finishLines;
-    [SerializeField] private float speedMultiplier,rotateSpeed;
+    [SerializeField] private float speedMultiplier;
     private Transform myTranform;
-    private Rigidbody myRigidbody;
-    [SerializeField] Transform myFinishline;
-    private Vector3 directionToGo,aux;
+    [SerializeField] public Transform myFinishline;
+    private Vector3 directionToGo;
 
     private void Awake()
     {
-        myRigidbody = GetComponent<Rigidbody>();
         myTranform = GetComponent<Transform>();
-        myFinishline = finishLines[Random.Range(0, 5)];
-        directionToGo = myFinishline.position - myTranform.position;
-        aux = new Vector3(directionToGo.x, 0, directionToGo.z);
-        StartMovement();
+        myFinishline = finishLines[Random.Range(0, 4)];
     }
     private void Update()
     {
-       
-        Quaternion toRotate = Quaternion.LookRotation(directionToGo, Vector3.up);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotate, rotateSpeed * Time.deltaTime);
+        StartMovement();
+        transform.LookAt(myFinishline);
     }
 
     public void StartMovement()
     {
-        myRigidbody.AddForce(aux*speedMultiplier);
-        
+        directionToGo = myFinishline.position - myTranform.position;
+        myTranform.position += directionToGo*(speedMultiplier/1000);
     }
 }
 
